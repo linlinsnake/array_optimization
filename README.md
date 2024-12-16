@@ -1,0 +1,11 @@
+文件夹内容
+	1.步骤实验流程记录：
+		ubk_optim_test.mlx
+	2.多目标遗传算法优化主代码：
+		arrayopt.m
+	3.多目标遗传算法适应函数代码：
+		Fun.m
+	4.Underbrink阵列旋转生成代码：
+		udbk_spiralArray.m
+	5.其他
+		MSL，3DB生成代码，当前原始Underbrink阵列生成代码
