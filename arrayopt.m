@@ -23,7 +23,7 @@ beq=[];
 N=50;
 %种群初始化随机解
 initialPopulation = repmat(lb, N, 1) + rand(N, nvars) .* (repmat(ub - lb, N, 1));
-knownSolutions = [0.016 ,0.0222 ,0.0384 , 0.0496 , 0.0587 , 0.0666 , 0.0736, 0.0800,4.2*pi]; % 已知解
+knownSolutions = [0.016 ,0.0222 ,0.0384 , 0.0496 , 0.0587 , 0.0666 , 0.0736, 0.0800,4.2*pi/16]; % 已知解
 initialPopulation(1:size(knownSolutions, 1), :) = knownSolutions;
 
 %% 求解器设置
@@ -71,13 +71,13 @@ MSL = zeros(2, size(f,2));
 BW = zeros(2, size(f,2));
 
 for i = (1:size(f,2))
-    Beam = anyBeam(x0, y0, f(i), -30, ux, uy, 'dB');
-    BW(1,i) = search3db(ux, uy, Beam, f(i));
-    [MSL(1,i),~,~] = findMSL(ux, uy, Beam);
+    Beam = anyBeam(x0, y0, f(i), -30, ux, uy);
+    BW(1,i) = search3db(ux, uy, Beam);
+    [MSL(1,i),~,~] = findMSL(Beam);
 
-    Beam = anyBeam(x1, y1, f(i), -30, ux, uy, 'dB');
+    Beam = anyBeam(x1, y1, f(i), -30, ux, uy);
     BW(2,i) = search3db(ux, uy, Beam, f(i));
-    [MSL(2,i),~,~] = findMSL(ux, uy, Beam);
+    [MSL(2,i),~,~] = findMSL(ux, uy);
 end
 figure
 plot(f, MSL(1,:),'k', 'LineWidth', 1);

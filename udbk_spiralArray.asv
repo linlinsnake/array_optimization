@@ -1,6 +1,4 @@
-clear;
-clc;
-close all;
+clear all;
 rmax = 0.08;
 r0 = 0.016;
 % beta = 0:0.005:1;% 待定参数？？
@@ -42,7 +40,6 @@ w=f/sum(f);%权重系数
 MSL = zeros(2, size(f,2));
 BW = zeros(2, size(f,2));
 
-
 for i = (1:size(f,2))
     Beam = anyBeam(x1, y1, f(i), -30, ux, uy);
     BW(1,i) = search3db(ux, uy, Beam);
@@ -58,7 +55,7 @@ ylabel('最大旁瓣级/dB');
 
 figure
 plot(f, BW(1,:),'k','LineWidth',1);
+axis([-inf inf 0 25]);
 legend('原阵列');
 xlabel('频率/Hz')    %y轴方向是列方向，x轴方向是行方向？？？
 ylabel('3dB带宽/°');
-
