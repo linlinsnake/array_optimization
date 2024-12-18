@@ -5,8 +5,8 @@ fitnessfcn=@Fun;
 nvars=8;
 % 约束条件形式1：下限与上限（若无取空数组[]）
 % lb<= X <= ub
-lb=[0.014  ,0.0212 ,0.0374 , 0.0486 , 0.0577 , 0.0656 , 0.0736, 0.0800];
-ub=[0.0172 ,0.0324 ,0.0436 , 0.0537 , 0.0616 , 0.0696 , 0.0760, 0.08];
+lb=[0.014  ,0.0212 ,0.0354, 0.0466 , 0.0567 , 0.0656 , 0.0736, 0.0800];
+ub=[0.018 ,0.0304 ,0.0416 , 0.0527 , 0.0616 , 0.0696 , 0.0760, 0.08];
 
 % 约束条件形式2：线性不等式约束（若无取空数组[]）
 % A*X <= b 
@@ -20,7 +20,7 @@ Aeq=[];
 beq=[];
 
 %种群大小
-N=40;
+N=50;
 %种群初始化随机解
 initialPopulation = repmat(lb, N, 1) + rand(N, nvars) .* (repmat(ub - lb, N, 1));
 knownSolutions = [0.016 ,0.0222 ,0.0384 , 0.0496 , 0.0587 , 0.0666 , 0.0736, 0.0800]; % 已知解
@@ -33,7 +33,7 @@ initialPopulation(1:size(knownSolutions, 1), :) = knownSolutions;
 % 停止代数stallGenLimit
 % 适应度函数偏差TolFun
 % 函数gaplotpareto：绘制Pareto前沿 
-options=optimoptions(@gamultiobj ,'paretoFraction',0.3,'populationsize',N,'generations',200,'stallGenLimit',100,'InitialPopulationMatrix',initialPopulation,'TolFun',1e-9,'PlotFcns',@gaplotpareto);
+options=optimoptions(@gamultiobj ,'paretoFraction',0.32,'populationsize',N,'generations',200,'stallGenLimit',100,'InitialPopulationMatrix',initialPopulation,'TolFun',1e-9,'PlotFcns',@gaplotpareto);
 
 %% 主求解
 [x,fval]=gamultiobj(fitnessfcn,nvars,A,b,Aeq,beq,lb,ub,options);
@@ -41,9 +41,9 @@ options=optimoptions(@gamultiobj ,'paretoFraction',0.3,'populationsize',N,'gener
 %% 结果提取
 % 因为gamultiobj是以目标函数分量取极小值为目标，
 
-   Na = 15;%15个臂
+   Na = 16;%15个臂
     Nm = 8; %每个臂上8个麦克风
-    r0=x(1);
+    r0=x(2,1);
     alpha = 4.2/6 * pi;
 
     [x0, y0] = CreateUnderbrink2( Na,Nm,alpha, 0.08, 0.016);
@@ -51,12 +51,12 @@ options=optimoptions(@gamultiobj ,'paretoFraction',0.3,'populationsize',N,'gener
 x0 = [x0 xt];
 y0 = [y0 yt];
 
-	phey1 = log(x/r0)/cot(alpha);%+(m-1)/Na*2*pi;
+	phey1 = log(x(2,:)/r0)/cot(alpha);%+(m-1)/Na*2*pi;
 thetaMN = zeros(Nm, Na);
 rmn = zeros(Nm, Na);
 for m = 1:Na
     thetaMN(:,m)=phey1+(m-1)/Na*2*pi;
-    rmn(:,m)=x;
+    rmn(:,m)=x(2,:);
 end
 
 rmn = reshape(rmn, 1, []);
