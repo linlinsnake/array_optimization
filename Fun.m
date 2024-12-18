@@ -19,9 +19,6 @@ thetaMN = reshape(thetaMN, 1, []);
 
 x1=rmn.*cos(thetaMN);
 y1=rmn.*sin(thetaMN);
-[xt, yt] = createSingleCircle(0.012, 8);
-x1 = [x1 xt];
-y1 = [y1 yt];
 ux = -1/sqrt(2):sqrt(2)/200:1/sqrt(2);
 uy = -1/sqrt(2):sqrt(2)/200:1/sqrt(2);
 f = 3000:1000:40000;
@@ -29,9 +26,9 @@ w=f/sum(f);%权重系数
 MSL = zeros(1, size(f,2));
 BW = zeros(1, size(f,2));
 for i = (1:size(f,2))
-    Beam = anyBeam(x1, y1, f(i), -30, ux, uy, 'dB');
-    BW(1,i) = search3db(ux, uy, Beam, f(i));
-    [MSL(1,i),~,~] = findMSL(ux, uy, Beam);
+    Beam = anyBeam(x1, y1, f(i), -30, ux, uy);
+    BW(1,i) = search3db(ux, uy, Beam);
+    [MSL(1,i),~,~] = findMSL(Beam);
 end
 Average_MSL=sum(MSL.*w); %加权平均,越高频率越关注
 Average_3DB=mean(BW);

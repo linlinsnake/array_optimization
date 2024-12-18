@@ -20,7 +20,7 @@ Aeq=[];
 beq=[];
 
 %种群大小
-N=50;
+N=80;
 %种群初始化随机解
 initialPopulation = repmat(lb, N, 1) + rand(N, nvars) .* (repmat(ub - lb, N, 1));
 knownSolutions = [0.016 ,0.0222 ,0.0384 , 0.0496 , 0.0587 , 0.0666 , 0.0736, 0.0800,4.2*pi/16]; % 已知解
@@ -76,8 +76,8 @@ for i = (1:size(f,2))
     [MSL(1,i),~,~] = findMSL(Beam);
 
     Beam = anyBeam(x1, y1, f(i), -30, ux, uy);
-    BW(2,i) = search3db(ux, uy, Beam, f(i));
-    [MSL(2,i),~,~] = findMSL(ux, uy);
+    BW(2,i) = search3db(ux, uy, Beam);
+    [MSL(2,i),~,~] = findMSL(Beam);
 end
 figure
 plot(f, MSL(1,:),'k', 'LineWidth', 1);
