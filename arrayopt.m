@@ -2,11 +2,11 @@
 % 适应度函数的函数句柄
 fitnessfcn=@Fun;
 % 变量个数
-nvars=8;
+nvars=9;
 % 约束条件形式1：下限与上限（若无取空数组[]）
 % lb<= X <= ub
-lb=[0.014  ,0.0212 ,0.0354, 0.0466 , 0.0567 , 0.0656 , 0.0736, 0.0800];
-ub=[0.018 ,0.0304 ,0.0416 , 0.0527 , 0.0616 , 0.0696 , 0.0760, 0.08];
+lb=[0.014  ,0.0212 ,0.0354, 0.0466 , 0.0567 , 0.0656 , 0.0736, 0.0800,1e-5];
+ub=[0.018 ,0.0304 ,0.0416 , 0.0527 , 0.0616 , 0.0696 , 0.0760, 0.08,2*pi];
 
 % 约束条件形式2：线性不等式约束（若无取空数组[]）
 % A*X <= b 
@@ -23,7 +23,7 @@ beq=[];
 N=50;
 %种群初始化随机解
 initialPopulation = repmat(lb, N, 1) + rand(N, nvars) .* (repmat(ub - lb, N, 1));
-knownSolutions = [0.016 ,0.0222 ,0.0384 , 0.0496 , 0.0587 , 0.0666 , 0.0736, 0.0800]; % 已知解
+knownSolutions = [0.016 ,0.0222 ,0.0384 , 0.0496 , 0.0587 , 0.0666 , 0.0736, 0.0800,4.2*pi]; % 已知解
 initialPopulation(1:size(knownSolutions, 1), :) = knownSolutions;
 
 %% 求解器设置
@@ -44,19 +44,17 @@ options=optimoptions(@gamultiobj ,'paretoFraction',0.32,'populationsize',N,'gene
    Na = 16;%15个臂
     Nm = 8; %每个臂上8个麦克风
     r0=x(2,1);
-    alpha = 4.2/6 * pi;
+    alpha = x(9);
 
     [x0, y0] = CreateUnderbrink2( Na,Nm,alpha, 0.08, 0.016);
-[xt, yt] = createSingleCircle(0.012, 8);
-x0 = [x0 xt];
-y0 = [y0 yt];
 
-	phey1 = log(x(2,:)/r0)/cot(alpha);%+(m-1)/Na*2*pi;
+
+	phey1 = log(x(1,1:8)/r0)/cot(alpha);%+(m-1)/Na*2*pi;
 thetaMN = zeros(Nm, Na);
 rmn = zeros(Nm, Na);
 for m = 1:Na
     thetaMN(:,m)=phey1+(m-1)/Na*2*pi;
-    rmn(:,m)=x(2,:);
+    rmn(:,m)=x(1,1:8);
 end
 
 rmn = reshape(rmn, 1, []);
@@ -64,12 +62,10 @@ thetaMN = reshape(thetaMN, 1, []);
 
 x1=rmn.*cos(thetaMN);
 y1=rmn.*sin(thetaMN);
-[xt, yt] = createSingleCircle(0.012, 8);
-x1 = [x1 xt];
-y1 = [y1 yt];
+
 ux = -1/sqrt(2):sqrt(2)/200:1/sqrt(2);
 uy = -1/sqrt(2):sqrt(2)/200:1/sqrt(2);
-f = 5000:500:50000;
+f = 3000:1000:50000;
 w=f/sum(f);%权重系数
 MSL = zeros(2, size(f,2));
 BW = zeros(2, size(f,2));
